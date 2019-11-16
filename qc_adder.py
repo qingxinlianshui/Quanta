@@ -3,7 +3,7 @@ The Quantum ripple-carry adder based on "A new quantum ripple-carry addition cir
 """
 import numpy as np
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
-from qiskit import(QuantumCircuit, execute, Aer,IBMQ)
+from qiskit import(QuantumCircuit, execute, Aer,IBMQ, providers)
 from qiskit.visualization import plot_histogram
 
 sub_maj = QuantumRegister(3)
@@ -55,7 +55,13 @@ circ.measure(cout[0],ans[4])
 backend_sim = Aer.get_backend('qasm_simulator') # The Aer's qasm_simulator
 job_sim = execute(circ, backend_sim, shots = 1024) # Execute the circuit on the qasm_simulator and set 1024 shots
 result_sim = job_sim.result()
-counts = result_sim.get_counts(circ)
-print(counts)
+counts_sim = result_sim.get_counts(circ)
+print(counts_sim)
 
-plot_histogram(counts)
+IBMQ.load_accounts()
+backend = providers.ibmq.least_busy(IBMQ.backends(simulator=False))
+print("The least busy device is chosen:",backend.name())
+job = execute(circ, backend )
+print( job.result().get_counts() )
+
+plot_histogram(counts_sim)

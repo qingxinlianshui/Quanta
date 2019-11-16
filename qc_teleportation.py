@@ -9,7 +9,7 @@ from collections import Counter
 import time,sys
 
 # Import brief QISKIT modules
-from qiskit import (QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer, IBMQ)
+from qiskit import (QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer, IBMQ, providers)
 
 # Import basic plotting tools
 from qiskit.visualization import plot_histogram
@@ -44,8 +44,9 @@ def calculation():
 
     backend = Aer.get_backend('qasm_simulator') # The Aer's qasm_simulator
  #   IBMQ.load_account()
- #   provider = IBMQ.get_provider(group = 'open')
- #   backend = provider.get_backend('ibmq_16_melbourne')
+ #   backend = providers.ibmq.least_busy(IBMQ.backends(simulator=False))
+ #   print("The least busy device is chosen:",backend.name())
+ #   job = execute(circ, backend,shots = 1024)
 
     job = execute(circ, backend = backend, shots = 1024, max_credits= 3) # Execute the circuit on the qasm_simulator and set 1024 shots
     result = job.result()
